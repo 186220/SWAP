@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SWAP - 项目管理</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--neutral-95);
+            font-family: var(--font-primary);
+        }
+        
+        .project-item {
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--neutral-100);
+            padding: var(--spacing-md);
+            border-radius: var(--radius-md) var(--radius-md) 0 0;
+            cursor: pointer;
+        }
+        
+        .project-title {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .project-client {
+            font-size: var(--font-size-sm);
+            color: var(--neutral-40);
+            margin-top: 2px;
+        }
+        
+        .project-amount {
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .project-details {
+            background-color: var(--neutral-100);
+            padding: var(--spacing-md);
+            border-radius: 0 0 var(--radius-md) var(--radius-md);
+            border-top: 1px solid var(--neutral-90);
+        }
+        
+        .timeline-item {
+            display: flex;
+            margin-bottom: var(--spacing-md);
+            position: relative;
+        }
+        
+        .timeline-item:not(:last-child)::before {
+            content: '';
+            position: absolute;
+            top: 24px;
+            left: 10px;
+            width: 2px;
+            height: calc(100% - 10px);
+            background-color: var(--neutral-80);
+        }
+        
+        .timeline-icon {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            margin-right: var(--spacing-md);
+            z-index: 1;
+        }
+        
+        .timeline-icon.completed {
+            background-color: var(--success);
+        }
+        
+        .timeline-icon.current {
+            background-color: var(--primary);
+        }
+        
+        .timeline-icon.upcoming {
+            background-color: var(--neutral-60);
+        }
+        
+        .timeline-content {
+            flex: 1;
+        }
+        
+        .timeline-date {
+            font-size: var(--font-size-sm);
+            color: var(--neutral-40);
+        }
+        
+        .timeline-title {
+            font-weight: 600;
+            margin: 4px 0;
+        }
+        
+        .milestone-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: var(--radius-full);
+            font-size: var(--font-size-sm);
+            margin-left: var(--spacing-sm);
+        }
+        
+        .milestone-payment {
+            background-color: rgba(76, 215, 165, 0.2);
+            color: var(--success);
+        }
+        
+        .milestone-delivery {
+            background-color: rgba(255, 157, 66, 0.2);
+            color: var(--accent);
+        }
+        
+        .action-row {
+            display: flex;
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-md);
+        }
+        
+        .action-button {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: var(--spacing-md);
+            border-radius: var(--radius-md);
+            background-color: var(--neutral-95);
+            text-decoration: none;
+        }
+        
+        .action-icon {
+            font-size: 24px;
+            color: var(--primary);
+            margin-bottom: var(--spacing-xs);
+        }
+        
+        .action-text {
+            font-size: var(--font-size-sm);
+            color: var(--neutral-20);
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <!-- iOS-style status bar -->
+    <div class="status-bar">
+        <div class="status-bar-time">14:30</div>
+        <div class="status-bar-icons">
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-wifi"></i>
+            <i class="fas fa-battery-full"></i>
+        </div>
+    </div>
+
+    <!-- App Header -->
+    <div class="header">
+        <h1 class="header-title">项目管理</h1>
+        <button class="header-action">
+            <i class="fas fa-plus"></i>
+        </button>
+    </div>
+
+    <!-- Tab Navigation -->
+    <div class="tabs">
+        <div class="tab active" onclick="switchTab(this, 'ongoing')">进行中</div>
+        <div class="tab" onclick="switchTab(this, 'completed')">已完成</div>
+        <div class="tab" onclick="switchTab(this, 'pending')">待确认</div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="content tab-container">
+            <!-- Ongoing Projects Tab Content -->
+            <div id="ongoing" class="tab-content">
+                <!-- Project 1 -->
+                <div class="project-item">
+                    <div class="project-header" onclick="toggleProjectDetails(this)">
+                        <div>
+                            <h3 class="project-title">电商平台UI设计</h3>
+                            <div class="project-client">科技树电商 · 进度80%</div>
+                        </div>
+                        <div>
+                            <div class="project-amount">¥8,500</div>
+                            <span class="badge badge-warning">明日截止</span>
+                            <i class="fas fa-chevron-down toggle-icon"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="project-details" style="display: none;">
+                        <!-- Project Timeline -->
+                        <h4>项目时间线</h4>
+                        
+                        <div class="timeline-item">
+                            <div class="timeline-icon completed">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="timeline-content">
+                                <div class="timeline-date">5月2日</div>
+                                <div class="timeline-title">项目启动
+                                    <span class="milestone-badge milestone-payment">¥2,500</span>
+                                </div>
+                                <div>初步需求分析和设计框架确认</div>
+                            </div>
+                        </div>
+                        
+                        <div class="timeline-item">
+                            <div class="timeline-icon completed">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="timeline-content">
+                                <div class="timeline-date">5月6日</div>
+                                <div class="timeline-title">首页和产品页设计</div>
+                                <div>页面风格确认和首批设计稿提交</div>
+                            </div>
+                        </div>
+                        
+                        <div class="timeline-item">
+                            <div class="timeline-icon current">
+                                <i class="fas fa-pen"></i>
+                            </div>
+                            <div class="timeline-content">
+                                <div class="timeline-date">进行中</div>
+                                <div class="timeline-title">购物流程和会员中心
+                                    <span class="milestone-badge milestone-payment">¥3,000</span>
+                                </div>
+                                <div>购物车、结算和会员中心界面设计</div>
+                            </div>
+                        </div>
+                        
+                        <div class="timeline-item">
+                            <div class="timeline-icon upcoming">
+                                <i class="fas fa-hourglass"></i>
+                            </div>
+                            <div class="timeline-content">
+                                <div class="timeline-date">待进行</div>
+                                <div class="timeline-title">项目验收和资源交付
+                                    <span class="milestone-badge milestone-payment">¥3,000</span>
+                                    <span class="milestone-badge milestone-delivery">交付</span>
+                                </div>
+                                <div>最终设计确认和源文件交付</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Action Buttons -->
+                        <div class="action-row">
+                            <a href="#" class="action-button">
+                                <i class="fas fa-file-contract action-icon"></i>
+                                <span class="action-text">查看合同</span>
+                            </a>
+                            <a href="#" class="action-button">
+                                <i class="fas fa-comment-alt action-icon"></i>
+                                <span class="action-text">客户消息</span>
+                            </a>
+                            <a href="#" class="action-button">
+                                <i class="fas fa-cloud-upload-alt action-icon"></i>
+                                <span class="action-text">上传交付物</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Project 2 -->
+                <div class="project-item">
+                    <div class="project-header" onclick="toggleProjectDetails(this)">
+                        <div>
+                            <h3 class="project-title">品牌LOGO设计</h3>
+                            <div class="project-client">新创科技 · 进度25%</div>
+                        </div>
+                        <div>
+                            <div class="project-amount">¥3,200</div>
+                            <span class="badge badge-primary">进行中</span>
+                            <i class="fas fa-chevron-down toggle-icon"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="project-details" style="display: none;">
+                        <!-- Project Timeline -->
+                        <h4>项目时间线</h4>
+                        
+                        <div class="timeline-item">
+                            <div class="timeline-icon completed">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="timeline-content">
+                                <div class="timeline-date">5月8日</div>
+                                <div class="timeline-title">项目启动
+                                    <span class="milestone-badge milestone-payment">¥1,000</span>
+                                </div>
+                                <div>品牌调研和设计需求确认</div>
+                            </div>
+                        </div>
+                        
+                        <div class="timeline-item">
+                            <div class="timeline-icon current">
+                                <i class="fas fa-pen"></i>
+                            </div>
+                            <div class="timeline-content">
+                                <div class="timeline-date">进行中</div>
+                                <div class="timeline-title">概念设计方案</div>
+                                <div>提供3-5个LOGO概念设计</div>
+                            </div>
+                        </div>
+                        
+                        <div class="timeline-item">
+                            <div class="timeline-icon upcoming">
+                                <i class="fas fa-hourglass"></i>
+                            </div>
+                            <div class="timeline-content">
+                                <div class="timeline-date">待进行</div>
+                                <div class="timeline-title">方案优化调整
+                                    <span class="milestone-badge milestone-payment">¥1,200</span>
+                                </div>
+                                <div>根据反馈调整设计方案</div>
+                            </div>
+                        </div>
+                        
+                        <div class="timeline-item">
+                            <div class="timeline-icon upcoming">
+                                <i class="fas fa-hourglass"></i>
+                            </div>
+                            <div class="timeline-content">
+                                <div class="timeline-date">待进行</div>
+                                <div class="timeline-title">最终交付
+                                    <span class="milestone-badge milestone-payment">¥1,000</span>
+                                    <span class="milestone-badge milestone-delivery">交付</span>
+                                </div>
+                                <div>提交最终LOGO及应用指南</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Action Buttons -->
+                        <div class="action-row">
+                            <a href="#" class="action-button">
+                                <i class="fas fa-file-contract action-icon"></i>
+                                <span class="action-text">查看合同</span>
+                            </a>
+                            <a href="#" class="action-button">
+                                <i class="fas fa-comment-alt action-icon"></i>
+                                <span class="action-text">客户消息</span>
+                            </a>
+                            <a href="#" class="action-button">
+                                <i class="fas fa-cloud-upload-alt action-icon"></i>
+                                <span class="action-text">上传交付物</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Completed Projects Tab Content -->
+            <div id="completed" class="tab-content" style="display: none;">
+                <!-- Empty state for completed projects -->
+                <div class="empty-state">
+                    <i class="fas fa-check-circle empty-state-icon"></i>
+                    <div class="empty-state-text">还没有已完成的项目</div>
+                    <button class="btn btn-primary">查看历史项目</button>
+                </div>
+            </div>
+            
+            <!-- Pending Projects Tab Content -->
+            <div id="pending" class="tab-content" style="display: none;">
+                <!-- Project Pending Approval -->
+                <div class="project-item">
+                    <div class="project-header" onclick="toggleProjectDetails(this)">
+                        <div>
+                            <h3 class="project-title">移动应用界面设计</h3>
+                            <div class="project-client">健康科技有限公司</div>
+                        </div>
+                        <div>
+                            <div class="project-amount">¥15,000</div>
+                            <span class="badge badge-warning">待确认</span>
+                            <i class="fas fa-chevron-down toggle-icon"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="project-details" style="display: none;">
+                        <p style="color: var(--neutral-40); margin-bottom: var(--spacing-md);">
+                            客户已发送项目邀请，请在5月12日前确认是否接受该项目。
+                        </p>
+                        
+                        <div class="card" style="margin-bottom: var(--spacing-md);">
+                            <h4>项目简介</h4>
+                            <p>为健康管理应用设计全套UI界面，包括用户注册、健康数据记录、数据分析和社区功能等核心页面。</p>
+                            <ul style="padding-left: var(--spacing-lg); margin-top: var(--spacing-sm);">
+                                <li>预计工期：30天</li>
+                                <li>项目类型：移动应用设计</li>
+                                <li>设计规范：iOS设计规范</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="display: flex; gap: var(--spacing-md);">
+                            <button class="btn btn-primary" style="flex: 1;">接受项目</button>
+                            <button class="btn btn-outline" style="flex: 1;">拒绝</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tab Navigation Bar -->
+    <div class="nav-bar">
+        <a href="#" class="nav-item">
+            <i class="fas fa-home nav-icon"></i>
+            <span>首页</span>
+        </a>
+        <a href="#" class="nav-item active">
+            <i class="fas fa-clipboard-list nav-icon"></i>
+            <span>项目</span>
+        </a>
+        <a href="#" class="nav-item">
+            <div style="position: relative;">
+                <i class="fas fa-bell nav-icon"></i>
+                <div class="notification-badge">3</div>
+            </div>
+            <span>通知</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fas fa-address-card nav-icon"></i>
+            <span>名片</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fas fa-ellipsis-h nav-icon"></i>
+            <span>更多</span>
+        </a>
+    </div>
+
+    <script src="../js/app.js"></script>
+</body>
+</html>

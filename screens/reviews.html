@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SWAP - 评价展示</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--neutral-95);
+            font-family: var(--font-primary);
+        }
+        
+        .rating-summary {
+            background-color: var(--neutral-100);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+            text-align: center;
+        }
+        
+        .rating-score {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--primary);
+            line-height: 1;
+        }
+        
+        .rating-count {
+            color: var(--neutral-40);
+            font-size: var(--font-size-sm);
+            margin: var(--spacing-xs) 0 var(--spacing-md);
+        }
+        
+        .rating-stars {
+            font-size: 20px;
+            color: var(--accent);
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .rating-distribution {
+            display: flex;
+            align-items: center;
+            margin-bottom: var(--spacing-xs);
+        }
+        
+        .rating-label {
+            width: 30px;
+            font-size: var(--font-size-sm);
+            text-align: right;
+            margin-right: var(--spacing-sm);
+        }
+        
+        .rating-bar {
+            flex: 1;
+            height: 6px;
+            background-color: var(--neutral-90);
+            border-radius: var(--radius-full);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .rating-fill {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            background-color: var(--accent);
+            border-radius: var(--radius-full);
+        }
+        
+        .rating-percent {
+            width: 40px;
+            font-size: var(--font-size-sm);
+            color: var(--neutral-40);
+            text-align: left;
+            margin-left: var(--spacing-sm);
+        }
+        
+        .review-item {
+            background-color: var(--neutral-100);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .review-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .reviewer-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: var(--spacing-md);
+        }
+        
+        .reviewer-info {
+            flex: 1;
+        }
+        
+        .reviewer-name {
+            font-weight: 600;
+            font-size: var(--font-size-lg);
+        }
+        
+        .review-project {
+            font-size: var(--font-size-sm);
+            color: var(--neutral-40);
+        }
+        
+        .review-rating {
+            color: var(--accent);
+            font-size: 16px;
+        }
+        
+        .review-date {
+            font-size: var(--font-size-sm);
+            color: var(--neutral-40);
+            text-align: right;
+        }
+        
+        .review-content {
+            line-height: 1.6;
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .review-images {
+            display: flex;
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-md);
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            padding-bottom: var(--spacing-sm);
+        }
+        
+        .review-image {
+            width: 120px;
+            height: 120px;
+            border-radius: var(--radius-sm);
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+        
+        .review-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--neutral-90);
+            padding-top: var(--spacing-md);
+            margin-top: var(--spacing-md);
+            color: var(--neutral-40);
+            font-size: var(--font-size-sm);
+        }
+        
+        .review-action {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .review-response {
+            background-color: var(--neutral-95);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-md);
+            margin-top: var(--spacing-md);
+        }
+        
+        .response-header {
+            font-weight: 500;
+            margin-bottom: var(--spacing-xs);
+            display: flex;
+            align-items: center;
+        }
+        
+        .response-header i {
+            margin-right: var(--spacing-xs);
+            color: var(--primary);
+        }
+        
+        .tag-container {
+            display: flex;
+            overflow-x: auto;
+            padding: var(--spacing-sm) 0;
+            margin-bottom: var(--spacing-md);
+            -webkit-overflow-scrolling: touch;
+            gap: var(--spacing-sm);
+        }
+        
+        .tag {
+            padding: var(--spacing-xs) var(--spacing-sm);
+            background-color: var(--neutral-90);
+            border-radius: var(--radius-full);
+            font-size: var(--font-size-sm);
+            white-space: nowrap;
+        }
+        
+        .tag.active {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .project-showcase {
+            margin-top: var(--spacing-lg);
+        }
+        
+        .project-case {
+            background-color: var(--neutral-100);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .project-title {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .project-stats {
+            display: flex;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .project-stat {
+            flex: 1;
+            text-align: center;
+            background-color: var(--neutral-95);
+            padding: var(--spacing-sm);
+            border-radius: var(--radius-md);
+        }
+        
+        .stat-number {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .stat-text {
+            font-size: var(--font-size-sm);
+            color: var(--neutral-40);
+        }
+        
+        .before-after {
+            display: flex;
+            gap: var(--spacing-sm);
+            margin-top: var(--spacing-md);
+        }
+        
+        .before-after-item {
+            flex: 1;
+        }
+        
+        .before-after-label {
+            font-size: var(--font-size-sm);
+            color: var(--neutral-40);
+            margin-bottom: var(--spacing-xs);
+        }
+        
+        .before-after-image {
+            width: 100%;
+            border-radius: var(--radius-sm);
+            aspect-ratio: 16/9;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+    <!-- iOS-style status bar -->
+    <div class="status-bar">
+        <div class="status-bar-time">14:30</div>
+        <div class="status-bar-icons">
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-wifi"></i>
+            <i class="fas fa-battery-full"></i>
+        </div>
+    </div>
+
+    <!-- App Header -->
+    <div class="header">
+        <h1 class="header-title">评价展示</h1>
+        <button class="header-action">
+            <i class="fas fa-sliders-h"></i>
+        </button>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="content">
+            <!-- Rating Summary -->
+            <div class="rating-summary">
+                <div class="rating-score">4.9</div>
+                <div class="rating-stars">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                </div>
+                <div class="rating-count">基于32个项目评价</div>
+                
+                <!-- Rating Distribution -->
+                <div class="rating-distribution">
+                    <div class="rating-label">5星</div>
+                    <div class="rating-bar">
+                        <div class="rating-fill" style="width: 85%;"></div>
+                    </div>
+                    <div class="rating-percent">85%</div>
+                </div>
+                <div class="rating-distribution">
+                    <div class="rating-label">4星</div>
+                    <div class="rating-bar">
+                        <div class="rating-fill" style="width: 12%;"></div>
+                    </div>
+                    <div class="rating-percent">12%</div>
+                </div>
+                <div class="rating-distribution">
+                    <div class="rating-label">3星</div>
+                    <div class="rating-bar">
+                        <div class="rating-fill" style="width: 3%;"></div>
+                    </div>
+                    <div class="rating-percent">3%</div>
+                </div>
+                <div class="rating-distribution">
+                    <div class="rating-label">2星</div>
+                    <div class="rating-bar">
+                        <div class="rating-fill" style="width: 0%;"></div>
+                    </div>
+                    <div class="rating-percent">0%</div>
+                </div>
+                <div class="rating-distribution">
+                    <div class="rating-label">1星</div>
+                    <div class="rating-bar">
+                        <div class="rating-fill" style="width: 0%;"></div>
+                    </div>
+                    <div class="rating-percent">0%</div>
+                </div>
+            </div>
+            
+            <!-- Filter Tags -->
+            <div class="tag-container">
+                <div class="tag active">全部评价</div>
+                <div class="tag">UI设计</div>
+                <div class="tag">用户体验</div>
+                <div class="tag">品牌设计</div>
+                <div class="tag">最近评价</div>
+                <div class="tag">五星评价</div>
+            </div>
+            
+            <!-- Reviews List -->
+            <div class="review-item">
+                <div class="review-header">
+                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Reviewer" class="reviewer-avatar">
+                    <div class="reviewer-info">
+                        <div class="reviewer-name">张先生</div>
+                        <div class="review-project">电商平台UI设计</div>
+                    </div>
+                    <div>
+                        <div class="review-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="review-date">2023年5月2日</div>
+                    </div>
+                </div>
+                
+                <div class="review-content">
+                    李梅的设计非常出色，她理解了我们的品牌调性，提供的UI设计既美观又实用，用户转化率比之前提高了30%。她的沟通和响应速度也很棒！整个项目按时完成，没有任何延误，非常满意这次合作。
+                </div>
+                
+                <div class="review-images">
+                    <img src="https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Review Image" class="review-image">
+                    <img src="https://images.unsplash.com/photo-1618788372246-79faff0c3742?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Review Image" class="review-image">
+                    <img src="https://images.unsplash.com/photo-1563013544-824ae1b704d3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Review Image" class="review-image">
+                </div>
+                
+                <div class="review-footer">
+                    <div class="review-action">
+                        <i class="far fa-thumbs-up"></i> 有帮助(12)
+                    </div>
+                    <div class="review-action">
+                        <i class="far fa-comment"></i> 回复
+                    </div>
+                </div>
+                
+                <div class="review-response">
+                    <div class="response-header">
+                        <i class="fas fa-reply"></i> 我的回复
+                    </div>
+                    <div>
+                        感谢张先生的信任和认可！很高兴我的设计能够帮助提升转化率，期待未来有机会再次合作。
+                    </div>
+                </div>
+            </div>
+            
+            <div class="review-item">
+                <div class="review-header">
+                    <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Reviewer" class="reviewer-avatar">
+                    <div class="reviewer-info">
+                        <div class="reviewer-name">王女士</div>
+                        <div class="review-project">金融App界面设计</div>
+                    </div>
+                    <div>
+                        <div class="review-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                        <div class="review-date">2023年4月15日</div>
+                    </div>
+                </div>
+                
+                <div class="review-content">
+                    与李梅合作是一次非常愉快的经历。她不仅提供了高质量的设计，还深入了解了我们的业务需求，提出了很多有价值的改进建议。我们的App重新设计后，用户停留时间增加了40%，操作流程更加顺畅了。
+                </div>
+                
+                <div class="review-images">
+                    <img src="https://images.unsplash.com/photo-1616499370260-485b3e5ed3fd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Review Image" class="review-image">
+                    <img src="https://images.unsplash.com/photo-1607968565043-36af90dde238?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Review Image" class="review-image">
+                </div>
+                
+                <div class="review-footer">
+                    <div class="review-action">
+                        <i class="far fa-thumbs-up"></i> 有帮助(8)
+                    </div>
+                    <div class="review-action">
+                        <i class="far fa-comment"></i> 回复
+                    </div>
+                </div>
+                
+                <div class="review-response">
+                    <div class="response-header">
+                        <i class="fas fa-reply"></i> 我的回复
+                    </div>
+                    <div>
+                        谢谢王女士的评价！很高兴能够为您的金融App带来实质性的改进，听到用户停留时间有所增加是我最大的满足。期待今后的合作！
+                    </div>
+                </div>
+            </div>
+            
+            <div class="review-item">
+                <div class="review-header">
+                    <img src="https://randomuser.me/api/portraits/men/75.jpg" alt="Reviewer" class="reviewer-avatar">
+                    <div class="reviewer-info">
+                        <div class="reviewer-name">刘先生</div>
+                        <div class="review-project">社交媒体App重设计</div>
+                    </div>
+                    <div>
+                        <div class="review-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="review-date">2023年3月27日</div>
+                    </div>
+                </div>
+                
+                <div class="review-content">
+                    非常出色的设计师！李梅对我们的社交媒体App进行了彻底的重新设计，不仅美观度大幅提升，而且用户体验也有显著改善。她特别注重细节，能够精准把握用户需求，交付速度也很快。新版本上线后用户活跃度提升了25%。
+                </div>
+                
+                <div class="review-footer">
+                    <div class="review-action">
+                        <i class="far fa-thumbs-up"></i> 有帮助(15)
+                    </div>
+                    <div class="review-action">
+                        <i class="far fa-comment"></i> 回复
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Project Showcase -->
+            <div class="project-showcase">
+                <h2>项目案例</h2>
+                
+                <div class="project-case">
+                    <div class="project-title">电商平台UI改版</div>
+                    <div class="project-stats">
+                        <div class="project-stat">
+                            <div class="stat-number">30%</div>
+                            <div class="stat-text">转化率提升</div>
+                        </div>
+                        <div class="project-stat">
+                            <div class="stat-number">45%</div>
+                            <div class="stat-text">页面停留时间增加</div>
+                        </div>
+                        <div class="project-stat">
+                            <div class="stat-number">5星</div>
+                            <div class="stat-text">客户评分</div>
+                        </div>
+                    </div>
+                    
+                    <p>为知名电商品牌重新设计了移动端界面，优化了购物流程，简化了结算过程，并强化了产品展示效果。</p>
+                    
+                    <div class="before-after">
+                        <div class="before-after-item">
+                            <div class="before-after-label">改版前</div>
+                            <img src="https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Before" class="before-after-image">
+                        </div>
+                        <div class="before-after-item">
+                            <div class="before-after-label">改版后</div>
+                            <img src="https://images.unsplash.com/photo-1618788372246-79faff0c3742?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="After" class="before-after-image">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="project-case">
+                    <div class="project-title">金融App用户体验优化</div>
+                    <div class="project-stats">
+                        <div class="project-stat">
+                            <div class="stat-number">40%</div>
+                            <div class="stat-text">用户停留时间</div>
+                        </div>
+                        <div class="project-stat">
+                            <div class="stat-number">60%</div>
+                            <div class="stat-text">功能使用率提升</div>
+                        </div>
+                        <div class="project-stat">
+                            <div class="stat-number">4.5星</div>
+                            <div class="stat-text">客户评分</div>
+                        </div>
+                    </div>
+                    
+                    <p>为某金融科技公司的移动应用进行重新设计，简化了理财产品的信息展示，优化了投资流程，增加了数据可视化功能。</p>
+                    
+                    <div class="before-after">
+                        <div class="before-after-item">
+                            <div class="before-after-label">改版前</div>
+                            <img src="https://images.unsplash.com/photo-1607968565043-36af90dde238?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Before" class="before-after-image">
+                        </div>
+                        <div class="before-after-item">
+                            <div class="before-after-label">改版后</div>
+                            <img src="https://images.unsplash.com/photo-1616499370260-485b3e5ed3fd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="After" class="before-after-image">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tab Navigation Bar -->
+    <div class="nav-bar">
+        <a href="#" class="nav-item">
+            <i class="fas fa-home nav-icon"></i>
+            <span>首页</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fas fa-clipboard-list nav-icon"></i>
+            <span>项目</span>
+        </a>
+        <a href="#" class="nav-item">
+            <div style="position: relative;">
+                <i class="fas fa-bell nav-icon"></i>
+                <div class="notification-badge">3</div>
+            </div>
+            <span>通知</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fas fa-address-card nav-icon"></i>
+            <span>名片</span>
+        </a>
+        <a href="#" class="nav-item active">
+            <i class="fas fa-ellipsis-h nav-icon"></i>
+            <span>更多</span>
+        </a>
+    </div>
+
+    <script src="../js/app.js"></script>
+</body>
+</html>

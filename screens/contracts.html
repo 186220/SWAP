@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SWAP - 合同查看</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--neutral-95);
+            font-family: var(--font-primary);
+        }
+        
+        .contract-card {
+            border-radius: var(--radius-md);
+            background-color: var(--neutral-100);
+            margin-bottom: var(--spacing-md);
+            overflow: hidden;
+        }
+        
+        .contract-header {
+            display: flex;
+            justify-content: space-between;
+            padding: var(--spacing-md);
+            border-bottom: 1px solid var(--neutral-90);
+        }
+        
+        .contract-title {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .contract-status {
+            font-weight: 500;
+        }
+        
+        .contract-status.active {
+            color: var(--success);
+        }
+        
+        .contract-status.pending {
+            color: var(--accent);
+        }
+        
+        .contract-status.expired {
+            color: var(--neutral-40);
+        }
+        
+        .contract-info {
+            padding: var(--spacing-md);
+            border-bottom: 1px solid var(--neutral-90);
+        }
+        
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: var(--spacing-xs);
+            font-size: var(--font-size-md);
+        }
+        
+        .info-label {
+            color: var(--neutral-40);
+        }
+        
+        .info-value {
+            font-weight: 500;
+        }
+        
+        .contract-payment {
+            padding: var(--spacing-md);
+        }
+        
+        .payment-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: var(--font-size-sm);
+            margin-top: var(--spacing-sm);
+        }
+        
+        .payment-table th, 
+        .payment-table td {
+            padding: var(--spacing-xs) var(--spacing-sm);
+            text-align: left;
+            border-bottom: 1px solid var(--neutral-90);
+        }
+        
+        .payment-table th {
+            color: var(--neutral-40);
+            font-weight: 600;
+        }
+        
+        .payment-status {
+            font-size: var(--font-size-sm);
+            padding: 2px 8px;
+            border-radius: var(--radius-full);
+            font-weight: 500;
+            display: inline-block;
+        }
+        
+        .payment-status.paid {
+            background-color: rgba(76, 215, 165, 0.2);
+            color: var(--success);
+        }
+        
+        .payment-status.pending {
+            background-color: rgba(255, 157, 66, 0.2);
+            color: var(--accent);
+        }
+        
+        .payment-status.future {
+            background-color: var(--neutral-90);
+            color: var(--neutral-40);
+        }
+        
+        .contract-terms {
+            padding: var(--spacing-md);
+            border-top: 1px solid var(--neutral-90);
+        }
+        
+        .term-item {
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .term-title {
+            font-weight: 600;
+            margin-bottom: var(--spacing-xs);
+        }
+        
+        .term-description {
+            font-size: var(--font-size-md);
+            color: var(--neutral-20);
+        }
+        
+        .term-highlight {
+            background-color: rgba(255, 157, 66, 0.2);
+            border-left: 3px solid var(--accent);
+            padding: var(--spacing-sm) var(--spacing-md);
+            margin: var(--spacing-sm) 0;
+            font-weight: 500;
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+        }
+        
+        .contract-actions {
+            display: flex;
+            gap: var(--spacing-md);
+            padding: var(--spacing-md);
+            border-top: 1px solid var(--neutral-90);
+        }
+        
+        .document-preview {
+            width: 100%;
+            height: 180px;
+            background-color: var(--neutral-95);
+            border-radius: var(--radius-sm);
+            margin-top: var(--spacing-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        .document-image {
+            width: 100%;
+            opacity: 0.7;
+        }
+        
+        .search-results {
+            background-color: var(--neutral-100);
+            box-shadow: var(--shadow-md);
+            border-radius: var(--radius-md);
+            margin-top: var(--spacing-md);
+            padding: var(--spacing-md);
+        }
+        
+        .highlight {
+            background-color: rgba(255, 157, 66, 0.3);
+            padding: 0 2px;
+        }
+    </style>
+</head>
+<body>
+    <!-- iOS-style status bar -->
+    <div class="status-bar">
+        <div class="status-bar-time">14:30</div>
+        <div class="status-bar-icons">
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-wifi"></i>
+            <i class="fas fa-battery-full"></i>
+        </div>
+    </div>
+
+    <!-- App Header -->
+    <div class="header">
+        <h1 class="header-title">合同查看</h1>
+        <div class="search-bar" style="margin: 0; flex: 1; margin-left: var(--spacing-md);">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" class="search-input" placeholder="搜索合同条款或关键词">
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="content">
+            <!-- Active Contract 1 -->
+            <div class="contract-card">
+                <div class="contract-header">
+                    <div>
+                        <h3 class="contract-title">电商平台UI设计</h3>
+                        <div style="font-size: var(--font-size-sm); color: var(--neutral-40);">
+                            科技树电商
+                        </div>
+                    </div>
+                    <div class="contract-status active">
+                        <i class="fas fa-check-circle"></i> 执行中
+                    </div>
+                </div>
+                
+                <div class="contract-info">
+                    <div class="info-row">
+                        <span class="info-label">合同编号</span>
+                        <span class="info-value">CT-2023-05-001</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">签订日期</span>
+                        <span class="info-value">2023年5月2日</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">截止日期</span>
+                        <span class="info-value" style="color: var(--danger);">2023年5月12日</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">合同金额</span>
+                        <span class="info-value" style="font-weight: 700; color: var(--primary);">¥8,500</span>
+                    </div>
+                </div>
+                
+                <div class="contract-payment">
+                    <h4>支付计划</h4>
+                    <table class="payment-table">
+                        <thead>
+                            <tr>
+                                <th>阶段</th>
+                                <th>金额</th>
+                                <th>预计日期</th>
+                                <th>状态</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>项目启动</td>
+                                <td>¥2,500</td>
+                                <td>5月2日</td>
+                                <td><span class="payment-status paid">已支付</span></td>
+                            </tr>
+                            <tr>
+                                <td>第二阶段</td>
+                                <td>¥3,000</td>
+                                <td>5月8日</td>
+                                <td><span class="payment-status pending">待确认</span></td>
+                            </tr>
+                            <tr>
+                                <td>最终交付</td>
+                                <td>¥3,000</td>
+                                <td>5月12日</td>
+                                <td><span class="payment-status future">未到期</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="contract-terms">
+                    <h4>重要条款摘要</h4>
+                    
+                    <div class="term-item">
+                        <div class="term-title">交付内容</div>
+                        <div class="term-description">
+                            包含电商平台全套UI设计，包括首页、产品列表、详情页、购物车、结算流程、会员中心等页面的设计稿及切图资源。
+                        </div>
+                    </div>
+                    
+                    <div class="term-item">
+                        <div class="term-title">知识产权</div>
+                        <div class="term-description">
+                            客户支付全部费用后获得最终设计作品的全部权利，设计师保留将作品用于个人作品集展示的权利。
+                        </div>
+                        <div class="term-highlight">
+                            注意：在全款支付前，客户仅获得预览设计的权利，不得用于商业用途。
+                        </div>
+                    </div>
+                    
+                    <div class="term-item">
+                        <div class="term-title">修改与反馈</div>
+                        <div class="term-description">
+                            每个阶段客户有2次免费修改机会，超出部分将额外计费，每次修改¥500起。
+                        </div>
+                    </div>
+                    
+                    <div class="document-preview">
+                        <img src="https://images.unsplash.com/photo-1607968565043-36af90dde238?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Contract Document Preview" class="document-image">
+                    </div>
+                </div>
+                
+                <div class="contract-actions">
+                    <button class="btn btn-primary" style="flex: 2;">
+                        <i class="fas fa-download btn-icon"></i> 下载合同
+                    </button>
+                    <button class="btn btn-outline" style="flex: 1;">
+                        <i class="fas fa-share-alt btn-icon"></i> 分享
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Search Results (initially hidden) -->
+            <div class="search-results" style="display: none;">
+                <h4>搜索结果："修改"</h4>
+                
+                <div style="margin-top: var(--spacing-md);">
+                    <div style="font-weight: 600; margin-bottom: var(--spacing-xs);">
+                        电商平台UI设计合同
+                    </div>
+                    <div style="padding: var(--spacing-sm); background-color: var(--neutral-95); border-radius: var(--radius-sm); margin-bottom: var(--spacing-sm);">
+                        ...每个阶段客户有2次免费<span class="highlight">修改</span>机会，超出部分将额外计费，每次<span class="highlight">修改</span>¥500起...
+                    </div>
+                </div>
+                
+                <div style="margin-top: var(--spacing-md);">
+                    <div style="font-weight: 600; margin-bottom: var(--spacing-xs);">
+                        品牌LOGO设计合同
+                    </div>
+                    <div style="padding: var(--spacing-sm); background-color: var(--neutral-95); border-radius: var(--radius-sm);">
+                        ...设计师将提供3次<span class="highlight">修改</span>机会，第一稿提交后客户需在3日内提出<span class="highlight">修改</span>建议...
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Contract 2 -->
+            <div class="contract-card">
+                <div class="contract-header">
+                    <div>
+                        <h3 class="contract-title">品牌LOGO设计</h3>
+                        <div style="font-size: var(--font-size-sm); color: var(--neutral-40);">
+                            新创科技
+                        </div>
+                    </div>
+                    <div class="contract-status active">
+                        <i class="fas fa-check-circle"></i> 执行中
+                    </div>
+                </div>
+                
+                <div class="contract-info">
+                    <div class="info-row">
+                        <span class="info-label">合同编号</span>
+                        <span class="info-value">CT-2023-05-002</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">签订日期</span>
+                        <span class="info-value">2023年5月8日</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">截止日期</span>
+                        <span class="info-value">2023年5月18日</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">合同金额</span>
+                        <span class="info-value" style="font-weight: 700; color: var(--primary);">¥3,200</span>
+                    </div>
+                </div>
+                
+                <div class="contract-actions" style="border-top: none;">
+                    <button class="btn btn-outline" style="flex: 1;">
+                        <i class="fas fa-chevron-right btn-icon"></i> 查看详情
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tab Navigation Bar -->
+    <div class="nav-bar">
+        <a href="#" class="nav-item">
+            <i class="fas fa-home nav-icon"></i>
+            <span>首页</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fas fa-clipboard-list nav-icon"></i>
+            <span>项目</span>
+        </a>
+        <a href="#" class="nav-item">
+            <div style="position: relative;">
+                <i class="fas fa-bell nav-icon"></i>
+                <div class="notification-badge">3</div>
+            </div>
+            <span>通知</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fas fa-address-card nav-icon"></i>
+            <span>名片</span>
+        </a>
+        <a href="#" class="nav-item active">
+            <i class="fas fa-ellipsis-h nav-icon"></i>
+            <span>更多</span>
+        </a>
+    </div>
+
+    <script src="../js/app.js"></script>
+</body>
+</html>

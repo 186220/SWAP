@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SWAP - 通知中心</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--neutral-95);
+            font-family: var(--font-primary);
+        }
+        
+        .notification-filters {
+            display: flex;
+            overflow-x: auto;
+            padding: var(--spacing-sm) var(--spacing-md);
+            gap: var(--spacing-md);
+            background-color: var(--neutral-100);
+            margin-bottom: var(--spacing-md);
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .filter {
+            padding: var(--spacing-xs) var(--spacing-sm);
+            background-color: var(--neutral-95);
+            border-radius: var(--radius-full);
+            font-size: var(--font-size-sm);
+            font-weight: 500;
+            color: var(--neutral-40);
+            white-space: nowrap;
+            cursor: pointer;
+        }
+        
+        .filter.active {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .notification-item {
+            background-color: var(--neutral-100);
+            margin-bottom: var(--spacing-sm);
+            border-radius: var(--radius-md);
+            display: flex;
+            padding: var(--spacing-md);
+            position: relative;
+        }
+        
+        .notification-item.unread::after {
+            content: '';
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--primary);
+        }
+        
+        .notification-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--neutral-95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: var(--spacing-md);
+            flex-shrink: 0;
+        }
+        
+        .notification-icon.project {
+            color: var(--primary);
+        }
+        
+        .notification-icon.message {
+            color: var(--accent);
+        }
+        
+        .notification-icon.payment {
+            color: var(--success);
+        }
+        
+        .notification-icon.system {
+            color: var(--neutral-40);
+        }
+        
+        .notification-content {
+            flex: 1;
+        }
+        
+        .notification-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .notification-body {
+            font-size: var(--font-size-md);
+            color: var(--neutral-40);
+            margin-bottom: 8px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .notification-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: var(--font-size-sm);
+            color: var(--neutral-60);
+        }
+        
+        .notification-actions {
+            display: flex;
+            gap: var(--spacing-xs);
+            margin-top: var(--spacing-sm);
+        }
+        
+        .notification-action {
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--radius-sm);
+            font-size: var(--font-size-sm);
+            font-weight: 500;
+        }
+        
+        .notification-action.primary {
+            color: white;
+            background-color: var(--primary);
+        }
+        
+        .notification-action.secondary {
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            background-color: transparent;
+        }
+        
+        .settings-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            background: none;
+            border: none;
+            color: var(--neutral-40);
+            font-size: 20px;
+        }
+        
+        .settings-panel {
+            background-color: var(--neutral-100);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-md);
+            margin-top: var(--spacing-md);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .settings-title {
+            font-weight: 600;
+            margin-bottom: var(--spacing-md);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .close-button {
+            background: none;
+            border: none;
+            color: var(--neutral-40);
+            font-size: 18px;
+            cursor: pointer;
+        }
+        
+        .settings-option {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--spacing-sm) 0;
+            border-bottom: 1px solid var(--neutral-90);
+        }
+        
+        .settings-option:last-child {
+            border-bottom: none;
+        }
+        
+        .settings-label {
+            font-size: var(--font-size-md);
+        }
+        
+        .settings-description {
+            font-size: var(--font-size-sm);
+            color: var(--neutral-40);
+        }
+        
+        /* Toggle Switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+        
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--neutral-80);
+            transition: 0.3s;
+            border-radius: 24px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.3s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: var(--primary);
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+    </style>
+</head>
+<body>
+    <!-- iOS-style status bar -->
+    <div class="status-bar">
+        <div class="status-bar-time">14:30</div>
+        <div class="status-bar-icons">
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-wifi"></i>
+            <i class="fas fa-battery-full"></i>
+        </div>
+    </div>
+
+    <!-- App Header -->
+    <div class="header">
+        <h1 class="header-title">通知中心</h1>
+        <button class="settings-button" onclick="document.getElementById('settingsPanel').style.display = 'block'">
+            <i class="fas fa-cog"></i>
+        </button>
+    </div>
+
+    <!-- Notification Filters -->
+    <div class="notification-filters">
+        <div class="filter active" data-filter="all" onclick="filterNotifications('all')">
+            全部
+        </div>
+        <div class="filter" data-filter="project" onclick="filterNotifications('project')">
+            项目
+        </div>
+        <div class="filter" data-filter="message" onclick="filterNotifications('message')">
+            消息
+        </div>
+        <div class="filter" data-filter="payment" onclick="filterNotifications('payment')">
+            支付
+        </div>
+        <div class="filter" data-filter="system" onclick="filterNotifications('system')">
+            系统
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="content">
+            <!-- Project Notification -->
+            <div class="notification-item unread category-project">
+                <div class="notification-icon project">
+                    <i class="fas fa-clipboard-list"></i>
+                </div>
+                <div class="notification-content">
+                    <div class="notification-title">项目截止日期提醒</div>
+                    <div class="notification-body">
+                        您的项目"电商平台UI设计"将在明天截止，目前进度80%。
+                    </div>
+                    <div class="notification-meta">
+                        <span>20分钟前</span>
+                        <span>项目提醒</span>
+                    </div>
+                    <div class="notification-actions">
+                        <button class="notification-action primary">查看项目</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Message Notification -->
+            <div class="notification-item unread category-message">
+                <div class="notification-icon message">
+                    <i class="fas fa-comment-alt"></i>
+                </div>
+                <div class="notification-content">
+                    <div class="notification-title">新消息：科技树电商</div>
+                    <div class="notification-body">
+                        "您好，我们对最新提交的UI设计非常满意，不过有几处小细节需要调整，可以安排时间讨论一下吗？"
+                    </div>
+                    <div class="notification-meta">
+                        <span>1小时前</span>
+                        <span>客户消息</span>
+                    </div>
+                    <div class="notification-actions">
+                        <button class="notification-action primary">回复</button>
+                        <button class="notification-action secondary">稍后提醒</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payment Notification -->
+            <div class="notification-item unread category-payment">
+                <div class="notification-icon payment">
+                    <i class="fas fa-coins"></i>
+                </div>
+                <div class="notification-content">
+                    <div class="notification-title">款项已到账</div>
+                    <div class="notification-body">
+                        您的项目"电商平台UI设计"第二阶段款项￥3,000已到账。
+                    </div>
+                    <div class="notification-meta">
+                        <span>今天 10:35</span>
+                        <span>支付通知</span>
+                    </div>
+                    <div class="notification-actions">
+                        <button class="notification-action primary">查看详情</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Notification -->
+            <div class="notification-item category-system">
+                <div class="notification-icon system">
+                    <i class="fas fa-bell"></i>
+                </div>
+                <div class="notification-content">
+                    <div class="notification-title">系统更新通知</div>
+                    <div class="notification-body">
+                        SWAP平台将于今晚23:00-次日凌晨2:00进行系统维护，期间部分功能可能暂时无法使用。
+                    </div>
+                    <div class="notification-meta">
+                        <span>昨天 15:40</span>
+                        <span>系统通知</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Project Notification 2 -->
+            <div class="notification-item category-project">
+                <div class="notification-icon project">
+                    <i class="fas fa-clipboard-check"></i>
+                </div>
+                <div class="notification-content">
+                    <div class="notification-title">项目里程碑已完成</div>
+                    <div class="notification-body">
+                        您的项目"品牌LOGO设计"已完成第一个里程碑：需求分析与市场调研。
+                    </div>
+                    <div class="notification-meta">
+                        <span>2天前</span>
+                        <span>项目进度</span>
+                    </div>
+                    <div class="notification-actions">
+                        <button class="notification-action primary">继续下一阶段</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Market Opportunity -->
+            <div class="notification-item category-system">
+                <div class="notification-icon system" style="background-color: rgba(76, 215, 165, 0.2); color: var(--success);">
+                    <i class="fas fa-briefcase"></i>
+                </div>
+                <div class="notification-content">
+                    <div class="notification-title">新项目机会</div>
+                    <div class="notification-body">
+                        有一个与您技能匹配的新项目："移动应用界面设计"，预算￥15,000。
+                    </div>
+                    <div class="notification-meta">
+                        <span>3天前</span>
+                        <span>项目推荐</span>
+                    </div>
+                    <div class="notification-actions">
+                        <button class="notification-action primary">查看项目</button>
+                        <button class="notification-action secondary">不感兴趣</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notification Settings Panel (initially hidden) -->
+        <div id="settingsPanel" class="settings-panel" style="display: none;">
+            <div class="settings-title">
+                通知设置
+                <button class="close-button" onclick="document.getElementById('settingsPanel').style.display = 'none'">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="settings-option">
+                <div>
+                    <div class="settings-label">项目提醒</div>
+                    <div class="settings-description">项目进度和截止日期提醒</div>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="settings-option">
+                <div>
+                    <div class="settings-label">客户消息</div>
+                    <div class="settings-description">来自客户的消息和反馈</div>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="settings-option">
+                <div>
+                    <div class="settings-label">支付通知</div>
+                    <div class="settings-description">支付到账和付款提醒</div>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="settings-option">
+                <div>
+                    <div class="settings-label">系统通知</div>
+                    <div class="settings-description">平台更新和系统维护</div>
+                </div>
+                <label class="switch">
+                    <input type="checkbox">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="settings-option">
+                <div>
+                    <div class="settings-label">市场机会</div>
+                    <div class="settings-description">新项目推荐和市场趋势</div>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="settings-option">
+                <div>
+                    <div class="settings-label">专注模式</div>
+                    <div class="settings-description">暂停所有通知推送</div>
+                </div>
+                <label class="switch">
+                    <input type="checkbox">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tab Navigation Bar -->
+    <div class="nav-bar">
+        <a href="#" class="nav-item">
+            <i class="fas fa-home nav-icon"></i>
+            <span>首页</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fas fa-clipboard-list nav-icon"></i>
+            <span>项目</span>
+        </a>
+        <a href="#" class="nav-item active">
+            <div style="position: relative;">
+                <i class="fas fa-bell nav-icon"></i>
+                <div class="notification-badge">3</div>
+            </div>
+            <span>通知</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fas fa-address-card nav-icon"></i>
+            <span>名片</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fas fa-ellipsis-h nav-icon"></i>
+            <span>更多</span>
+        </a>
+    </div>
+
+    <script src="../js/app.js"></script>
+</body>
+</html>

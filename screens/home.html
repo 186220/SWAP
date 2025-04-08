@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SWAP - 首页</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--neutral-95);
+            font-family: var(--font-primary);
+        }
+        .income-card {
+            background: linear-gradient(to right, var(--primary), var(--primary-dark));
+            color: white;
+            border-radius: var(--radius-md);
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+        }
+        .income-amount {
+            font-size: 28px;
+            font-weight: 700;
+            margin: var(--spacing-sm) 0;
+        }
+        .income-label {
+            font-size: var(--font-size-sm);
+            opacity: 0.8;
+        }
+        .project-progress {
+            display: flex;
+            justify-content: space-between;
+            margin-top: var(--spacing-xs);
+        }
+        .today-tasks {
+            margin-top: var(--spacing-md);
+        }
+        .task-item {
+            display: flex;
+            align-items: center;
+            padding: var(--spacing-sm) 0;
+        }
+        .task-checkbox {
+            margin-right: var(--spacing-sm);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+        }
+        .task-checkbox.completed {
+            background-color: var(--primary);
+        }
+        .task-text {
+            flex: 1;
+        }
+        .task-text.completed {
+            text-decoration: line-through;
+            color: var(--neutral-60);
+        }
+        .task-time {
+            font-size: var(--font-size-sm);
+            color: var(--neutral-40);
+        }
+        .quick-actions {
+            display: flex;
+            gap: var(--spacing-sm);
+            margin: var(--spacing-md) 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- iOS-style status bar -->
+    <div class="status-bar">
+        <div class="status-bar-time">14:30</div>
+        <div class="status-bar-icons">
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-wifi"></i>
+            <i class="fas fa-battery-full"></i>
+        </div>
+    </div>
+
+    <!-- App Header -->
+    <div class="header">
+        <div>
+            <h1 class="header-title">你好，李梅</h1>
+            <p class="card-subtitle">今天是周二，5月10日</p>
+        </div>
+        <div>
+            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Profile" class="avatar">
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="content">
+            <!-- Income Card -->
+            <div class="income-card">
+                <div class="income-label">本月收入</div>
+                <div class="income-amount">¥24,680</div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span>较上月 <i class="fas fa-arrow-up"></i> 12%</span>
+                    <span>预计：¥32,500</span>
+                </div>
+            </div>
+            
+            <!-- Projects Section -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">进行中项目</div>
+                    <a href="#" class="header-action">查看全部 <i class="fas fa-angle-right"></i></a>
+                </div>
+                
+                <!-- Project 1 -->
+                <div class="card" style="margin-bottom: var(--spacing-sm); box-shadow: none; padding: var(--spacing-sm);">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: var(--spacing-xs);">
+                        <div>
+                            <h3 style="margin: 0; font-size: var(--font-size-lg);">电商平台UI设计</h3>
+                            <span class="badge badge-warning">明日截止</span>
+                        </div>
+                        <span style="color: var(--primary);">¥8,500</span>
+                    </div>
+                    <div class="project-progress">
+                        <span style="font-size: var(--font-size-sm); color: var(--neutral-40);">进度 80%</span>
+                        <span style="font-size: var(--font-size-sm); color: var(--danger);">剩余2天</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 80%;"></div>
+                    </div>
+                </div>
+                
+                <!-- Project 2 -->
+                <div class="card" style="margin-bottom: 0; box-shadow: none; padding: var(--spacing-sm);">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: var(--spacing-xs);">
+                        <div>
+                            <h3 style="margin: 0; font-size: var(--font-size-lg);">品牌LOGO设计</h3>
+                            <span class="badge badge-primary">进行中</span>
+                        </div>
+                        <span style="color: var(--primary);">¥3,200</span>
+                    </div>
+                    <div class="project-progress">
+                        <span style="font-size: var(--font-size-sm); color: var(--neutral-40);">进度 25%</span>
+                        <span style="font-size: var(--font-size-sm); color: var(--neutral-40);">剩余7天</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 25%;"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Today's Tasks -->
+            <div class="card today-tasks">
+                <div class="card-header">
+                    <div class="card-title">今日任务</div>
+                    <a href="#" class="header-action">添加 <i class="fas fa-plus"></i></a>
+                </div>
+                
+                <!-- Task 1 -->
+                <div class="task-item">
+                    <div class="task-checkbox completed">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <div class="task-text completed">与电商客户确认设计方案</div>
+                    <div class="task-time">10:00</div>
+                </div>
+                
+                <!-- Task 2 -->
+                <div class="task-item">
+                    <div class="task-checkbox"></div>
+                    <div class="task-text">完成LOGO第一版设计稿</div>
+                    <div class="task-time">15:00</div>
+                </div>
+                
+                <!-- Task 3 -->
+                <div class="task-item">
+                    <div class="task-checkbox"></div>
+                    <div class="task-text">提交电商平台首页设计</div>
+                    <div class="task-time">18:00</div>
+                </div>
+            </div>
+            
+            <!-- Recent Notifications -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">最新通知</div>
+                    <a href="#" class="header-action">查看全部</a>
+                </div>
+                
+                <div class="list-item" style="padding: var(--spacing-sm) 0;">
+                    <div class="icon icon-warning">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <div style="margin-left: var(--spacing-sm); flex: 1;">
+                        <div style="font-weight: 500;">电商平台客户留言了新评论</div>
+                        <div style="font-size: var(--font-size-sm); color: var(--neutral-40);">20分钟前</div>
+                    </div>
+                    <div>
+                        <i class="fas fa-chevron-right" style="color: var(--neutral-60);"></i>
+                    </div>
+                </div>
+                
+                <div class="list-item" style="padding: var(--spacing-sm) 0;">
+                    <div class="icon icon-primary">
+                        <i class="fas fa-coins"></i>
+                    </div>
+                    <div style="margin-left: var(--spacing-sm); flex: 1;">
+                        <div style="font-weight: 500;">新款项到账：¥5,600</div>
+                        <div style="font-size: var(--font-size-sm); color: var(--neutral-40);">今天 10:35</div>
+                    </div>
+                    <div>
+                        <i class="fas fa-chevron-right" style="color: var(--neutral-60);"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <button class="btn btn-primary" style="flex: 1;">
+                    <i class="fas fa-plus btn-icon"></i>创建项目
+                </button>
+                <button class="btn btn-outline" style="flex: 1;">
+                    <i class="fas fa-share-alt btn-icon"></i>分享名片
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tab Navigation Bar -->
+    <div class="nav-bar">
+        <a href="#" class="nav-item active">
+            <i class="fas fa-home nav-icon"></i>
+            <span>首页</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fas fa-clipboard-list nav-icon"></i>
+            <span>项目</span>
+        </a>
+        <a href="#" class="nav-item">
+            <div style="position: relative;">
+                <i class="fas fa-bell nav-icon"></i>
+                <div class="notification-badge">3</div>
+            </div>
+            <span>通知</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fas fa-address-card nav-icon"></i>
+            <span>名片</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fas fa-ellipsis-h nav-icon"></i>
+            <span>更多</span>
+        </a>
+    </div>
+
+    <script src="../js/app.js"></script>
+</body>
+</html>

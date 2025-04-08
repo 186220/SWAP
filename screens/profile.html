@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SWAP - 个人名片</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--neutral-95);
+            font-family: var(--font-primary);
+        }
+        
+        .cover-image {
+            height: 150px;
+            background-image: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .profile-header {
+            position: relative;
+            padding: 0 var(--spacing-md);
+            margin-top: -50px;
+        }
+        
+        .profile-picture {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 4px solid white;
+            object-fit: cover;
+            background-color: var(--neutral-90);
+        }
+        
+        .profile-name {
+            font-size: 24px;
+            font-weight: 700;
+            margin: var(--spacing-sm) 0 4px 0;
+        }
+        
+        .profile-title {
+            color: var(--neutral-40);
+            font-size: var(--font-size-md);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .profile-stats {
+            display: flex;
+            margin: var(--spacing-md) 0;
+            gap: var(--spacing-md);
+        }
+        
+        .stat-item {
+            flex: 1;
+            text-align: center;
+            background-color: var(--neutral-100);
+            padding: var(--spacing-md);
+            border-radius: var(--radius-md);
+        }
+        
+        .stat-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .stat-label {
+            font-size: var(--font-size-sm);
+            color: var(--neutral-40);
+            margin-top: 4px;
+        }
+        
+        .skills-section {
+            margin: var(--spacing-md) 0;
+        }
+        
+        .skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--spacing-xs);
+            margin-top: var(--spacing-sm);
+        }
+        
+        .skill-tag {
+            background-color: rgba(60, 82, 171, 0.1);
+            color: var(--primary);
+            padding: 4px 12px;
+            border-radius: var(--radius-full);
+            font-size: var(--font-size-sm);
+            font-weight: 500;
+        }
+        
+        .portfolio-section {
+            margin: var(--spacing-md) 0;
+        }
+        
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--spacing-sm);
+            margin-top: var(--spacing-sm);
+        }
+        
+        .portfolio-item {
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            position: relative;
+            aspect-ratio: 1/1;
+        }
+        
+        .portfolio-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .portfolio-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.7));
+            padding: var(--spacing-sm);
+            color: white;
+        }
+        
+        .portfolio-title {
+            font-size: var(--font-size-sm);
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .reviews-section {
+            margin: var(--spacing-md) 0;
+        }
+        
+        .review-card {
+            background-color: var(--neutral-100);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .review-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .review-header img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: var(--spacing-sm);
+        }
+        
+        .review-author {
+            flex: 1;
+        }
+        
+        .review-name {
+            font-weight: 600;
+            font-size: var(--font-size-md);
+        }
+        
+        .review-project {
+            font-size: var(--font-size-sm);
+            color: var(--neutral-40);
+        }
+        
+        .review-rating {
+            color: var(--accent);
+        }
+        
+        .contact-section {
+            background-color: var(--neutral-100);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-md);
+            margin: var(--spacing-md) 0;
+        }
+        
+        .contact-option {
+            display: flex;
+            align-items: center;
+            margin-bottom: var(--spacing-sm);
+            color: var(--neutral-20);
+            text-decoration: none;
+        }
+        
+        .contact-icon {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(60, 82, 171, 0.1);
+            color: var(--primary);
+            border-radius: 50%;
+            margin-right: var(--spacing-sm);
+        }
+        
+        .qr-code-section {
+            text-align: center;
+            margin: var(--spacing-xl) 0;
+        }
+        
+        .qr-code {
+            width: 150px;
+            height: 150px;
+            background-color: white;
+            padding: var(--spacing-sm);
+            margin: var(--spacing-md) auto;
+            border-radius: var(--radius-sm);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .available-badge {
+            background-color: rgba(76, 215, 165, 0.2);
+            color: var(--success);
+            padding: 4px 12px;
+            border-radius: var(--radius-full);
+            font-size: var(--font-size-sm);
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+        }
+        
+        .available-badge i {
+            margin-right: 4px;
+        }
+        
+        .share-button {
+            position: absolute;
+            right: var(--spacing-md);
+            top: var(--spacing-lg);
+            background-color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .share-options {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: var(--neutral-100);
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+            padding: var(--spacing-lg) var(--spacing-md);
+            z-index: 100;
+            box-shadow: var(--shadow-lg);
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .share-options.active {
+            transform: translateY(0);
+        }
+        
+        .share-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .share-title {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+        }
+        
+        .share-close {
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: var(--neutral-40);
+        }
+        
+        .share-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .share-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+        }
+        
+        .share-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--neutral-95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+        
+        .share-label {
+            font-size: var(--font-size-sm);
+            color: var(--neutral-20);
+            text-align: center;
+        }
+        
+        .share-link {
+            display: flex;
+            align-items: center;
+            background-color: var(--neutral-95);
+            border-radius: var(--radius-full);
+            padding: 12px 16px;
+            margin: var(--spacing-md) 0;
+        }
+        
+        .share-link-text {
+            flex: 1;
+            font-size: var(--font-size-sm);
+            color: var(--neutral-40);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .copy-button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: var(--radius-full);
+            font-size: var(--font-size-sm);
+            font-weight: 500;
+        }
+        
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 50;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        
+        .overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+    </style>
+</head>
+<body>
+    <!-- iOS-style status bar -->
+    <div class="status-bar">
+        <div class="status-bar-time">14:30</div>
+        <div class="status-bar-icons">
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-wifi"></i>
+            <i class="fas fa-battery-full"></i>
+        </div>
+    </div>
+
+    <!-- Cover Image & Share Button -->
+    <div class="cover-image">
+        <div class="share-button" onclick="document.getElementById('shareOptions').classList.add('active'); document.getElementById('overlay').classList.add('active');">
+            <i class="fas fa-share-alt"></i>
+        </div>
+    </div>
+
+    <!-- Profile Header -->
+    <div class="profile-header">
+        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Profile" class="profile-picture">
+        <h1 class="profile-name">李梅</h1>
+        <div class="profile-title">UI/UX 设计师 · SWAP创意工作室</div>
+        <div class="available-badge">
+            <i class="fas fa-circle"></i>
+            接受项目委托
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="content">
+            <!-- Profile Statistics -->
+            <div class="profile-stats">
+                <div class="stat-item">
+                    <div class="stat-value">4.9</div>
+                    <div class="stat-label">平均评分</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">32</div>
+                    <div class="stat-label">已完成项目</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">97%</div>
+                    <div class="stat-label">准时交付</div>
+                </div>
+            </div>
+
+            <!-- About Me -->
+            <h2>关于我</h2>
+            <p>资深UI/UX设计师，专注于电商、金融和社交媒体应用界面设计，擅长结合数据分析与用户体验设计，为客户创造直观、高转化率的界面。拥有5年设计经验，服务过多家知名互联网企业。</p>
+
+            <!-- Skills Section -->
+            <div class="skills-section">
+                <h2>专业技能</h2>
+                <div class="skills-container">
+                    <div class="skill-tag">UI设计</div>
+                    <div class="skill-tag">用户体验</div>
+                    <div class="skill-tag">品牌设计</div>
+                    <div class="skill-tag">交互设计</div>
+                    <div class="skill-tag">原型设计</div>
+                    <div class="skill-tag">Figma</div>
+                    <div class="skill-tag">Sketch</div>
+                    <div class="skill-tag">Adobe XD</div>
+                </div>
+            </div>
+
+            <!-- Portfolio -->
+            <div class="portfolio-section">
+                <h2>精选作品</h2>
+                <div class="portfolio-grid">
+                    <div class="portfolio-item">
+                        <img src="https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="电商应用设计" class="portfolio-image">
+                        <div class="portfolio-overlay">
+                            <h3 class="portfolio-title">奢侈品电商App</h3>
+                        </div>
+                    </div>
+                    <div class="portfolio-item">
+                        <img src="https://images.unsplash.com/photo-1616499370260-485b3e5ed3fd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="金融应用设计" class="portfolio-image">
+                        <div class="portfolio-overlay">
+                            <h3 class="portfolio-title">财富管理平台</h3>
+                        </div>
+                    </div>
+                    <div class="portfolio-item">
+                        <img src="https://images.unsplash.com/photo-1634084462412-b54873c0a56d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="社交媒体应用设计" class="portfolio-image">
+                        <div class="portfolio-overlay">
+                            <h3 class="portfolio-title">社交媒体重设计</h3>
+                        </div>
+                    </div>
+                    <div class="portfolio-item">
+                        <img src="https://images.unsplash.com/photo-1601972599720-36938d4ecd31?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="健康应用设计" class="portfolio-image">
+                        <div class="portfolio-overlay">
+                            <h3 class="portfolio-title">健康监测应用</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reviews Section -->
+            <div class="reviews-section">
+                <h2>客户评价</h2>
+                <div class="review-card">
+                    <div class="review-header">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Client">
+                        <div class="review-author">
+                            <div class="review-name">张先生</div>
+                            <div class="review-project">电商平台UI设计</div>
+                        </div>
+                        <div class="review-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <p>"李梅的设计非常出色，她理解了我们的品牌调性，提供的UI设计既美观又实用，用户转化率比之前提高了30%。她的沟通和响应速度也很棒！"</p>
+                </div>
+                
+                <div class="review-card">
+                    <div class="review-header">
+                        <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Client">
+                        <div class="review-author">
+                            <div class="review-name">王女士</div>
+                            <div class="review-project">金融App界面设计</div>
+                        </div>
+                        <div class="review-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                    </div>
+                    <p>"与李梅合作是一次非常愉快的经历。她不仅提供了高质量的设计，还深入了解了我们的业务需求，提出了很多有价值的改进建议。"</p>
+                </div>
+            </div>
+
+            <!-- Contact Section -->
+            <div class="contact-section">
+                <h2>联系方式</h2>
+                <a href="mailto:lm@designstudio.com" class="contact-option">
+                    <div class="contact-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div>lm@designstudio.com</div>
+                </a>
+                <a href="tel:+8613800138000" class="contact-option">
+                    <div class="contact-icon">
+                        <i class="fas fa-phone-alt"></i>
+                    </div>
+                    <div>+86 138 0013 8000</div>
+                </a>
+                <a href="#" class="contact-option">
+                    <div class="contact-icon">
+                        <i class="fab fa-weixin"></i>
+                    </div>
+                    <div>design_LiMei</div>
+                </a>
+            </div>
+
+            <!-- QR Code Section -->
+            <div class="qr-code-section">
+                <h3>扫描二维码保存名片</h3>
+                <div class="qr-code">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://swap.app/profile/limei" width="100%" height="100%" alt="Profile QR Code">
+                </div>
+                <p style="color: var(--neutral-40); font-size: var(--font-size-sm);">
+                    或点击右上角分享按钮
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Share Options Panel -->
+    <div id="shareOptions" class="share-options">
+        <div class="share-header">
+            <div class="share-title">分享个人名片</div>
+            <button class="share-close" onclick="document.getElementById('shareOptions').classList.remove('active'); document.getElementById('overlay').classList.remove('active');">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div class="share-grid">
+            <a href="#" class="share-option">
+                <div class="share-icon" style="color: #07C160;">
+                    <i class="fab fa-weixin"></i>
+                </div>
+                <div class="share-label">微信</div>
+            </a>
+            <a href="#" class="share-option">
+                <div class="share-icon" style="color: #0088FF;">
+                    <i class="fas fa-comment"></i>
+                </div>
+                <div class="share-label">短信</div>
+            </a>
+            <a href="#" class="share-option">
+                <div class="share-icon" style="color: #1296DB;">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <div class="share-label">邮件</div>
+            </a>
+            <a href="#" class="share-option">
+                <div class="share-icon" style="color: #EA5D5C;">
+                    <i class="fab fa-weibo"></i>
+                </div>
+                <div class="share-label">微博</div>
+            </a>
+            <a href="#" class="share-option">
+                <div class="share-icon" style="color: #0078D4;">
+                    <i class="fab fa-linkedin"></i>
+                </div>
+                <div class="share-label">领英</div>
+            </a>
+            <a href="#" class="share-option">
+                <div class="share-icon" style="color: #ED4956;">
+                    <i class="fas fa-qrcode"></i>
+                </div>
+                <div class="share-label">二维码</div>
+            </a>
+            <a href="#" class="share-option">
+                <div class="share-icon" style="color: #30D158;">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <div class="share-label">存为PDF</div>
+            </a>
+            <a href="#" class="share-option">
+                <div class="share-icon" style="color: #8E8E93;">
+                    <i class="fas fa-ellipsis-h"></i>
+                </div>
+                <div class="share-label">更多</div>
+            </a>
+        </div>
+        
+        <div class="share-link">
+            <div class="share-link-text">https://swap.app/profile/limei</div>
+            <button class="copy-button" onclick="alert('链接已复制到剪贴板')">复制</button>
+        </div>
+        
+        <button class="btn btn-primary" style="width: 100%;" onclick="shareProfile()">生成专属分享卡片</button>
+    </div>
+    
+    <!-- Overlay -->
+    <div id="overlay" class="overlay" onclick="document.getElementById('shareOptions').classList.remove('active'); document.getElementById('overlay').classList.remove('active');"></div>
+
+    <!-- Tab Navigation Bar -->
+    <div class="nav-bar">
+        <a href="#" class="nav-item">
+            <i class="fas fa-home nav-icon"></i>
+            <span>首页</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fas fa-clipboard-list nav-icon"></i>
+            <span>项目</span>
+        </a>
+        <a href="#" class="nav-item">
+            <div style="position: relative;">
+                <i class="fas fa-bell nav-icon"></i>
+                <div class="notification-badge">3</div>
+            </div>
+            <span>通知</span>
+        </a>
+        <a href="#" class="nav-item active">
+            <i class="fas fa-address-card nav-icon"></i>
+            <span>名片</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fas fa-ellipsis-h nav-icon"></i>
+            <span>更多</span>
+        </a>
+    </div>
+
+    <script src="../js/app.js"></script>
+</body>
+</html>
